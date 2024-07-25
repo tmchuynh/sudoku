@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playwrite+HR+Lijeva&display=swap");
+
+body {
+      background-color: #f5fcff;
+      font-family: "Dancing Script", cursive;
+      font-optical-sizing: auto;
+      font-weight: 600;
+      font-style: normal;
+}
+
+.container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+}
+
+.row {
+      display: flex;
+}
+
+.cell {
+      width: 60px;
+      height: 60px;
+      border: 1px solid black;
+      text-align: center;
+      font-size: 2rem;
+      line-height: 30px;
+      box-sizing: border-box;
+      position: relative;
+}
+
+.number {
+      margin-top: 25%;
+}
+
+input {
+      font-family: "Dancing Script", cursive;
+      font-optical-sizing: auto;
+      font-weight: 600;
+      font-style: normal;
+      color: red;
+}
+
+input[type="text"] {
+      caret-color: black; /* Change 'red' to your desired color */
+}
+
+.lightBackground {
+      background-color: #9dd1f1;
+}
+
+.darkBackground {
+      background-color: #508aa8;
+}
+
+.solvedCell {
+      background-color: #031927;
+      color: #00796b;
+}
+
+.solved {
+      color: #031927;
+      background-color: #00796b;
+}
+
+.buttonContainer {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+}
+
+.buttonContainer button {
+      margin-right: 10px;
+      font-size: 1.5rem;
+      font-family: "Dancing Script", cursive;
+}
+
+.result {
+      margin-top: 20px;
+      font-weight: bold;
+}
+
+.correct {
+      color: yellow;
+}
+
+.incorrect {
+      color: purple;
+}
