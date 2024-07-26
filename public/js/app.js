@@ -4,8 +4,8 @@ let solvedBoard;
 // Function to shuffle an array
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    const j = Math.floor(Math.random() * (i + 1)); // Selects a random index from the array
+    [array[i], array[j]] = [array[j], array[i]]; // Swaps the two numbers in the array
   }
   return array;
 }
@@ -18,12 +18,14 @@ function fillBoard(board) {
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
       if (board[row][col] === 0) {
-        emptyCells.push([row, col]);
+        emptyCells.push([row, col]); // Adds the place of the empty cells into the array
       }
     }
   }
 
   let index = 0;
+
+  // there are empty cells in the puzzle
   while (index < emptyCells.length) {
     const [row, col] = emptyCells[index];
     let filled = false;
@@ -33,16 +35,17 @@ function fillBoard(board) {
     }
 
     while (stack[index].length > 0) {
-      const num = stack[index].pop();
+      const num = stack[index].pop(); // The last number from the shuffled array #1 - 9
 
       if (isValidMove(board, row, col, num)) {
         board[row][col] = num;
-        index++;
+        index++; // One less empty cell
         filled = true;
         break;
       }
     }
 
+    // if not a valid move
     if (!filled) {
       stack[index] = null;
       board[row][col] = 0;
@@ -70,6 +73,7 @@ function removeNumbers(board) {
     const row = Math.floor(Math.random() * 9);
     const col = Math.floor(Math.random() * 9);
     if (puzzle[row][col] !== 0) {
+      // Randomly remove 0's
       puzzle[row][col] = 0;
       removedCount++;
     }
@@ -88,7 +92,6 @@ function generateRandomSudoku() {
 
 // Function to find an empty cell in the Sudoku puzzle
 function findEmptyCell(board) {
-  // MISSING CODE GOES HERE
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
       if (board[row][col] === 0) {
@@ -149,7 +152,6 @@ function isValidMove(board, row, col, num) {
 function attachInputListeners() {
   const textInputs = document.querySelectorAll("input[type='text']");
   textInputs.forEach((input) => {
-    // MISSING CODE GOES HERE
     input.addEventListener("input", handleInput);
   });
 }
