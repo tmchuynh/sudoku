@@ -10,31 +10,47 @@ function shuffleArray(array) {
   return array;
 }
 
-// Recursive function to fill the Sudoku board
+// Function to fill the Sudoku board
 function fillBoard(board) {
+  const stack = [];
+  const emptyCells = [];
+
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
-      
       if (board[row][col] === 0) {
-        const numbers = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        
-        for (const num of numbers) {
-          if (isValidMove(board, row, col, num)) {
-            board[row][col] = num;
-            
-            if (fillBoard(board)) {
-              return true;
-            }
-            
-            board[row][col] = 0; // Backtrack
-          }
-          
-        }
-        return false; // No valid number found
+        emptyCells.push([row, col]);
       }
     }
   }
-  return true; // Board filled
+
+  let index = 0;
+  while (index < emptyCells.length) {
+    const [row, col] = emptyCells[index];
+    let filled = false;
+
+    if (!stack[index]) {
+      stack[index] = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    }
+
+    while (stack[index].length > 0) {
+      const num = stack[index].pop();
+
+      if (isValidMove(board, row, col, num)) {
+        board[row][col] = num;
+        index++;
+        filled = true;
+        break;
+      }
+    }
+
+    if (!filled) {
+      stack[index] = null;
+      board[row][col] = 0;
+      index--;
+    }
+  }
+
+  return board;
 }
 
 // Function to generate a fully solved Sudoku board
@@ -72,6 +88,7 @@ function generateRandomSudoku() {
 
 // Function to find an empty cell in the Sudoku puzzle
 function findEmptyCell(board) {
+  // MISSING CODE GOES HERE
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
       if (board[row][col] === 0) {
@@ -109,15 +126,9 @@ function solveSudoku(board) {
   return solvedPuzzle;
 }
 
-// Function to check if a move is valid
 function isValidMove(board, row, col, num) {
   for (let i = 0; i < 9; i++) {
-    if (board[row][i] === num) {
-      return false;
-    }
-  }
-  for (let i = 0; i < 9; i++) {
-    if (board[i][col] === num) {
+    if (board[row][i] === num || board[i][col] === num) {
       return false;
     }
   }
@@ -131,13 +142,14 @@ function isValidMove(board, row, col, num) {
       }
     }
   }
-  return true; // Move is valid
+  return true;
 }
 
 // Attach event listener to input elements dynamically
 function attachInputListeners() {
   const textInputs = document.querySelectorAll("input[type='text']");
   textInputs.forEach((input) => {
+    // MISSING CODE GOES HERE
     input.addEventListener("input", handleInput);
   });
 }
@@ -145,18 +157,15 @@ function attachInputListeners() {
 // Function to create the Sudoku puzzle grid
 function createSudokuGrid(puzzle, solvedCells) {
   container.innerHTML = "";
-      
   puzzle.forEach((row, rowIndex) => {
     const rowElement = document.createElement("div");
     rowElement.classList.add("row");
-        
+
     row.forEach((cell, columnIndex) => {
       let cellElement;
-          
       if (cell !== 0) {
         cellElement = document.createElement("div");
         cellElement.classList.add("cell");
-            
         let number = document.createElement("div");
         number.classList.add("number");
         number.innerHTML = cell;
@@ -171,7 +180,6 @@ function createSudokuGrid(puzzle, solvedCells) {
         }
 
         cellElement.appendChild(number);
-            
       } else if (cell === 0) {
         cellElement = document.createElement("input");
         cellElement.classList.add("cell");
