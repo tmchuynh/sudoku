@@ -171,24 +171,24 @@ function createSudokuGrid(puzzle, solvedCells) {
                         cellElement.maxLength = 1;
                         cellElement.type = "text";
                   }
-                 
-      const rowsPerGroup = 3; // Number of rows per group (for darkBackground or lightBackground)
-      const columnsPerGroup = 3; // Number of columns per group (for darkBackground or lightBackground)
 
-      // Determine the row group based on rowIndex
-      const rowGroupIndex = Math.floor(rowIndex / rowsPerGroup);
+                  const rowsPerGroup = 3; // Number of rows per group (for darkBackground or lightBackground)
+                  const columnsPerGroup = 3; // Number of columns per group (for darkBackground or lightBackground)
 
-      // Determine the column group based on columnIndex
-      const columnGroupIndex = Math.floor(columnIndex / columnsPerGroup);
+                  // Determine the row group based on rowIndex
+                  const rowGroupIndex = Math.floor(rowIndex / rowsPerGroup);
 
-      // Determine the background color based on row group and column group
-      const isDarkBackground =
-        (rowGroupIndex % 2 === 0 && columnGroupIndex % 2 === 0) ||
-        (rowGroupIndex % 2 === 1 && columnGroupIndex % 2 === 1);
+                  // Determine the column group based on columnIndex
+                  const columnGroupIndex = Math.floor(columnIndex / columnsPerGroup);
 
-      cellElement.classList.add(
-        isDarkBackground ? "darkBackground" : "lightBackground"
-      );
+                  // Determine the background color based on row group and column group
+                  const isDarkBackground =
+                        (rowGroupIndex % 2 === 0 && columnGroupIndex % 2 === 0) ||
+                        (rowGroupIndex % 2 === 1 && columnGroupIndex % 2 === 1);
+
+                  cellElement.classList.add(
+                        isDarkBackground ? "darkBackground" : "lightBackground"
+                  );
                   cellElement.setAttribute("data-row", rowIndex);
                   cellElement.setAttribute("data-col", columnIndex);
                   rowElement.appendChild(cellElement);
