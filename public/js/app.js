@@ -14,16 +14,21 @@ function shuffleArray(array) {
 function fillBoard(board) {
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
+      
       if (board[row][col] === 0) {
         const numbers = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        
         for (const num of numbers) {
           if (isValidMove(board, row, col, num)) {
             board[row][col] = num;
+            
             if (fillBoard(board)) {
               return true;
             }
+            
             board[row][col] = 0; // Backtrack
           }
+          
         }
         return false; // No valid number found
       }
