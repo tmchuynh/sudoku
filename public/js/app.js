@@ -1,7 +1,12 @@
 const container = document.getElementById("container");
+const cellNumberInput = document.querySelector(".form-control");
 let solvedBoard;
 let cellsToRemove = 40; // Number of cells to remove
 
+
+cellNumberInput.addEventListener("input", () => {
+      console.log(event.target.value);
+})
 
 // Function to shuffle an array
 function shuffleArray(array) {
@@ -151,7 +156,7 @@ function isValidMove(board, row, col, num) {
 
 // Attach event listener to input elements dynamically
 function attachInputListeners() {
-      const textInputs = document.querySelectorAll("input[type='text']");
+      const textInputs = container.querySelectorAll("input[type='text']");
       textInputs.forEach((input) => {
             input.addEventListener("input", handleInput);
       });
