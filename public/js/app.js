@@ -2,11 +2,27 @@ const container = document.getElementById("container");
 const cellNumberInput = document.querySelector(".form-control");
 let solvedBoard;
 let cellsToRemove = 40; // Number of cells to remove
+const totalCells = 81; // 9 x 9 grid
 
 
 cellNumberInput.addEventListener("input", () => {
-      console.log(event.target.value);
+      if (isNaN(cellNumberInput.value)) {
+            alert("Please enter a number");
+            event.target.value = "";
+      }
+      if (event.target.value >= 82) {
+            alert("The number of cells removed cannot be greater than the number of cells");
+            event.target.value = "";
+      }
 })
+
+cellNumberInput.addEventListener("keydown", () => {
+      if (event.key === "Enter") {
+            cellsToRemove = cellNumberInput.value;
+            cellNumberInput.value = "";
+            resetPuzzle();
+      }
+});
 
 // Function to shuffle an array
 function shuffleArray(array) {
