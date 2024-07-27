@@ -63,6 +63,11 @@ button:hover {
       background-color: #ffdfb3;
 }
 
+#solvedNumbers {
+      margin: 1rem;
+      visibility: hidden;
+}
+
 .result {
       margin-top: 20px;
       font-weight: bold;
@@ -76,13 +81,13 @@ button:hover {
       background-color: #f5957d;
 }
 
-/* .correct {
+.correct {
       color: yellow;
 }
 
 .incorrect {
       color: purple;
-} */
+}
 
 .solvedCell {
       background-color: #7c0d0d;

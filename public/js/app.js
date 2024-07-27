@@ -160,6 +160,7 @@ function attachInputListeners() {
 // Function to create the Sudoku puzzle grid
 function createSudokuGrid(puzzle, solvedCells) {
       container.innerHTML = "";
+      let numOfSolvedCells = 0;
       puzzle.forEach((row, rowIndex) => {
             const rowElement = document.createElement("div");
             rowElement.classList.add("row");
@@ -176,6 +177,7 @@ function createSudokuGrid(puzzle, solvedCells) {
                         if (workingPuzzle[rowIndex][columnIndex] !== 0) {
                               cellElement.classList.add("correct");
                               cellElement.classList.add("solved");
+                              numOfSolvedCells++;
                         }
 
                         if (solvedCells.has(`${rowIndex}-${columnIndex}`)) {
@@ -218,6 +220,17 @@ function createSudokuGrid(puzzle, solvedCells) {
 
       // Attach event listeners to input fields after grid creation
       attachInputListeners();
+      console.log(numOfSolvedCells);
+
+      let message;
+      if (numOfSolvedCells > Math.ceil(cellsToRemove / 2)) {
+            message = "Great job!";
+      } else if (numOfSolvedCells == cellsToRemove) {
+            message = "Pefection!"
+      } else {
+            message = "Try again!"
+      }
+      document.getElementById("solvedNumbers").innerHTML = `You solved ${numOfSolvedCells} out of ${cellsToRemove} cells! </br> ${message}`;
 }
 
 // Function to solve the puzzle
@@ -237,12 +250,12 @@ function solvePuzzle() {
                   }
             }
       }
-
       createSudokuGrid(solvedBoard, solvedCells);
 }
 
 // Function to reset the puzzle
 function resetPuzzle() {
+      document.getElementById("solvedNumbers").style.visibility = "hidden";
       initialPuzzle = generateRandomSudoku();
       puzzle = JSON.parse(JSON.stringify(initialPuzzle));
       workingPuzzle = Array.from({ length: 9 }, () => Array(9).fill(0));
@@ -289,7 +302,10 @@ let solvedPuzzle = [];
 createSudokuGrid(puzzle, new Set());
 
 // Attach event listeners to buttons
-document.getElementById("solveButton").addEventListener("click", solvePuzzle);
+document.getElementById("solveButton").addEventListener("click", () => {
+      document.getElementById("solvedNumbers").style.visibility = "visible";
+      solvePuzzle();
+});
 document.getElementById("resetButton").addEventListener("click", resetPuzzle);
 
 const easyMode = document.getElementById("easyButton");
