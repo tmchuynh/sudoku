@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playwrite+HR+Lijeva&display=swap");
 
 body {
-      background-color: #f5fcff;
+      background-color: #fff;
       font-family: "Dancing Script", cursive;
       font-optical-sizing: auto;
       font-weight: 600;
@@ -50,6 +50,7 @@ input[type="text"] {
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-bottom: 2rem;
 }
 
 .buttonContainer button {
@@ -63,7 +64,7 @@ button:hover {
 }
 
 #solvedNumbers {
-      margin: 1rem;
+      margin: 1.5rem;
       visibility: hidden;
 }
 
@@ -75,7 +76,7 @@ button:hover {
 
 .input-group {
       width: 75%;
-      margin: 1rem auto;
+      margin: 1.5rem auto;
 }
 
 .result {
