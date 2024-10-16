@@ -153,11 +153,14 @@ function createSudokuGrid ( puzzle, solvedCells = new Set() ) {
             rowElement.classList.add( "row" );
 
             row.forEach( ( cell, columnIndex ) => {
-                  let cellElement;
+                  // Create a cell element (either <div> or <input>)
+                  let cellElement = cell !== 0 ? document.createElement( "div" ) : document.createElement( "input" );
+                  cellElement.classList.add( "cell" );
+
+                  // For non-zero cells (preset numbers)
                   if ( cell !== 0 ) {
-                        cellElement = document.createElement( "div" );
-                        cellElement.classList.add( "cell" );
                         cellElement.textContent = cell;
+
                         if ( workingPuzzle[ rowIndex ][ columnIndex ] !== 0 ) {
                               cellElement.classList.add( "correct", "solved" );
                               numOfSolvedCells++;
@@ -166,8 +169,7 @@ function createSudokuGrid ( puzzle, solvedCells = new Set() ) {
                               cellElement.classList.add( "solvedCell" );
                         }
                   } else {
-                        cellElement = document.createElement( "input" );
-                        cellElement.classList.add( "cell" );
+                        // For cells that can be filled by the user
                         cellElement.maxLength = 1;
                         cellElement.type = "text";
                         cellElement.dataset.row = rowIndex;
