@@ -34,85 +34,54 @@ function shuffleArray ( array ) {
 
 // Optimized function to fill the Sudoku board using backtracking
 function fillBoard ( board ) {
-      const emptyCell = findBestCell( board );
-      if ( !emptyCell ) return true; // Board is complete
+      const stack = [];
+      const emptyCells = [];
 
-      const [ row, col, possibleValues ] = emptyCell;
-
-      for ( let num of possibleValues ) {
-            if ( isValidMove( board, row, col, num ) ) {
-                  board[ row ][ col ] = num;
-
-                  if ( fillBoard( board ) ) {
-                        return true; // Successfully filled the board
-                  }
-
-                  board[ row ][ col ] = 0; // Backtrack
-            }
-      }
-
-      return false; // No valid number found
-}
-
-// Function to find the next empty cell
-function findBestCell ( board ) {
-      let minOptions = 10;
-      let bestCell = null;
-      let bestValues = [];
-
-      // Precompute possible values for all cells
-      const possibleValuesMap = Array.from( { length: 9 }, () =>
-            Array.from( { length: 9 }, () => null )
-      );
-
+      // Collect all empty cells' coordinates
       for ( let row = 0; row < 9; row++ ) {
             for ( let col = 0; col < 9; col++ ) {
                   if ( board[ row ][ col ] === 0 ) {
-                        // Only compute possible values if the cell is empty
-                        const possibleValues = getPossibleValues( board, row, col );
-                        possibleValuesMap[ row ][ col ] = possibleValues;
-                        const numPossibleValues = possibleValues.length;
-
-                        if ( numPossibleValues < minOptions ) {
-                              minOptions = numPossibleValues;
-                              bestCell = [ row, col ];
-                              bestValues = possibleValues;
-
-                              // Short-circuit: if we find a cell with only one possible value, return immediately
-                              if ( minOptions === 1 ) {
-                                    return [ row, col, possibleValues ];
-                              }
-                        }
+                        emptyCells.push( [ row, col ] );
                   }
             }
       }
 
-      // Return the best cell found along with its possible values
-      return bestCell ? [ ...bestCell, bestValues ] : null;
-}
+      let index = 0;
 
+      // Main loop for backtracking through empty cells
+      while ( index < emptyCells.length ) {
+            const [ row, col ] = emptyCells[ index ];
 
-// Function to get possible values for a given cell
-function getPossibleValues ( board, row, col ) {
-      const possibleValues = new Set( [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] );
+            // Initialize stack for current cell if it doesn't exist
+            if ( !stack[ index ] ) {
+                  stack[ index ] = shuffleArray( [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] ); // Shuffle numbers once
+            }
 
-      // Remove numbers from the same row and column
-      for ( let i = 0; i < 9; i++ ) {
-            possibleValues.delete( board[ row ][ i ] );
-            possibleValues.delete( board[ i ][ col ] );
-      }
+            let moveMade = false;
 
-      // Remove numbers from the same 3x3 subgrid
-      const startRow = Math.floor( row / 3 ) * 3;
-      const startCol = Math.floor( col / 3 ) * 3;
-      for ( let i = startRow; i < startRow + 3; i++ ) {
-            for ( let j = startCol; j < startCol + 3; j++ ) {
-                  possibleValues.delete( board[ i ][ j ] );
+            // Attempt to place numbers from the stack
+            while ( stack[ index ].length > 0 ) {
+                  const num = stack[ index ].pop();  // Get the next candidate number
+
+                  if ( isValidMove( board, row, col, num ) ) {
+                        board[ row ][ col ] = num;
+                        index++;  // Move to the next empty cell
+                        moveMade = true;
+                        break;
+                  }
+            }
+
+            // If no valid number was found, backtrack
+            if ( !moveMade ) {
+                  stack[ index ] = null; // Clear current stack
+                  index--;             // Backtrack to the previous empty cell
+                  board[ row ][ col ] = 0; // Reset current cell
             }
       }
 
-      return Array.from( possibleValues );
+      return board;
 }
+
 
 // Generate a fully solved Sudoku board
 function generateSolvedBoard () {
