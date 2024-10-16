@@ -1,168 +1,141 @@
-const container = document.getElementById("container");
-const cellNumberInput = document.querySelector(".form-control");
+const container = document.querySelector( ".container" );
+const cellNumberInput = document.querySelector( ".form-control" );
 let solvedBoard;
 let cellsToRemove = 40; // Number of cells to remove
 const totalCells = 81; // 9 x 9 grid
 
-
-cellNumberInput.addEventListener("input", () => {
-      if (isNaN(cellNumberInput.value)) {
-            alert("Please enter a number");
+// Validate number input and update cells to remove
+cellNumberInput.addEventListener( "input", ( event ) => {
+      const value = parseInt( event.target.value, 10 );
+      if ( isNaN( value ) || value < 0 || value > 81 ) {
+            alert( "Please enter a valid number between 0 and 81." );
             event.target.value = "";
+      } else {
+            cellsToRemove = value;
       }
-      if (event.target.value >= 82) {
-            alert("The number of cells removed cannot be greater than the number of cells");
-            event.target.value = "";
-      }
-})
+} );
 
-cellNumberInput.addEventListener("keydown", () => {
-      if (event.key === "Enter") {
-            cellsToRemove = cellNumberInput.value;
-            cellNumberInput.value = "";
+// Handle Enter key to reset the puzzle
+cellNumberInput.addEventListener( "keydown", ( event ) => {
+      if ( event.key === "Enter" ) {
+            event.preventDefault();
             resetPuzzle();
       }
-});
+} );
 
-// Function to shuffle an array
-function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1)); // Selects a random index from the array
-            [array[i], array[j]] = [array[j], array[i]]; // Swaps the two numbers in the array
+// Function to shuffle an array (optimized Fisher-Yates shuffle)
+function shuffleArray ( array ) {
+      for ( let i = array.length - 1; i > 0; i-- ) {
+            const j = Math.floor( Math.random() * ( i + 1 ) );
+            [ array[ i ], array[ j ] ] = [ array[ j ], array[ i ] ];
       }
       return array;
 }
 
-// Function to fill the Sudoku board
-function fillBoard(board) {
-      const stack = [];
-      const emptyCells = [];
+// Optimized function to fill the Sudoku board using backtracking
+function fillBoard ( board ) {
+      const emptyCell = findEmptyCell( board );
+      if ( !emptyCell ) return true; // Board is complete
 
-      for (let row = 0; row < 9; row++) {
-            for (let col = 0; col < 9; col++) {
-                  if (board[row][col] === 0) {
-                        emptyCells.push([row, col]); // Adds the place of the empty cells into the array
-                  }
-            }
-      }
+      const [ row, col ] = emptyCell;
+      const numbers = shuffleArray( [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] );
 
-      let index = 0;
-
-      // there are empty cells in the puzzle
-      while (index < emptyCells.length) {
-            const [row, col] = emptyCells[index];
-            let filled = false;
-
-            if (!stack[index]) {
-                  stack[index] = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-            }
-
-            while (stack[index].length > 0) {
-                  const num = stack[index].pop(); // The last number from the shuffled array #1 - 9
-
-                  if (isValidMove(board, row, col, num)) {
-                        board[row][col] = num;
-                        index++; // One less empty cell
-                        filled = true;
-                        break;
-                  }
-            }
-
-            // if not a valid move
-            if (!filled) {
-                  stack[index] = null;
-                  board[row][col] = 0;
-                  index--;
-            }
-      }
-
-      return board;
-}
-
-// Function to generate a fully solved Sudoku board
-function generateSolvedBoard() {
-      const board = Array.from({ length: 9 }, () => Array(9).fill(0));
-      fillBoard(board);
-      return board;
-}
-
-// Function to remove numbers to create a puzzle
-function removeNumbers(board) {
-      const puzzle = JSON.parse(JSON.stringify(board));
-      let removedCount = 0;
-
-      while (removedCount < cellsToRemove) {
-            const row = Math.floor(Math.random() * 9);
-            const col = Math.floor(Math.random() * 9);
-            if (puzzle[row][col] !== 0) {
-                  // Randomly remove 0's
-                  puzzle[row][col] = 0;
-                  removedCount++;
-            }
-      }
-
-      return puzzle;
-}
-
-// Function to generate a random Sudoku puzzle
-function generateRandomSudoku() {
-      const solved = generateSolvedBoard();
-      solvedBoard = JSON.parse(JSON.stringify(solved)); // Store solved board
-      const puzzle = removeNumbers(solved);
-      return puzzle;
-}
-
-// Function to find an empty cell in the Sudoku puzzle
-function findEmptyCell(board) {
-      for (let row = 0; row < 9; row++) {
-            for (let col = 0; col < 9; col++) {
-                  if (board[row][col] === 0) {
-                        return [row, col];
-                  }
-            }
-      }
-      return null; // No empty cell found
-}
-
-// Helper function for solving Sudoku recursively
-function solveHelper(board) {
-      const emptyCell = findEmptyCell(board);
-      if (!emptyCell) {
-            return true; // Puzzle solved
-      }
-
-      const [row, col] = emptyCell;
-      for (let num = 1; num <= 9; num++) {
-            if (isValidMove(board, row, col, num)) {
-                  board[row][col] = num;
-                  if (solveHelper(board)) {
+      for ( let num of numbers ) {
+            if ( isValidMove( board, row, col, num ) ) {
+                  board[ row ][ col ] = num;
+                  if ( fillBoard( board ) ) {
                         return true;
                   }
-                  board[row][col] = 0; // Backtrack
+                  board[ row ][ col ] = 0; // Backtrack
             }
       }
-      return false; // No valid number found for this cell
+      return false; // No valid number found
+}
+
+// Generate a fully solved Sudoku board
+function generateSolvedBoard () {
+      const board = Array.from( { length: 9 }, () => Array( 9 ).fill( 0 ) );
+      fillBoard( board );
+      return board;
+}
+
+// Function to remove numbers to create a puzzle (improved efficiency)
+function removeNumbers ( board ) {
+      const puzzle = cloneBoard( board );
+      let removed = 0;
+
+      while ( removed < cellsToRemove ) {
+            const row = Math.floor( Math.random() * 9 );
+            const col = Math.floor( Math.random() * 9 );
+            if ( puzzle[ row ][ col ] !== 0 ) {
+                  puzzle[ row ][ col ] = 0;
+                  removed++;
+            }
+      }
+      return puzzle;
+}
+
+// Clone a 2D array efficiently
+function cloneBoard ( board ) {
+      return board.map( row => [ ...row ] );
+}
+
+// Generate a random Sudoku puzzle
+function generateRandomSudoku () {
+      const solved = generateSolvedBoard();
+      solvedBoard = cloneBoard( solved ); // Store solved board
+      return removeNumbers( solved );
+}
+
+// Find an empty cell in the Sudoku puzzle
+function findEmptyCell ( board ) {
+      for ( let row = 0; row < 9; row++ ) {
+            for ( let col = 0; col < 9; col++ ) {
+                  if ( board[ row ][ col ] === 0 ) {
+                        return [ row, col ];
+                  }
+            }
+      }
+      return null; // No empty cells found
+}
+
+// Recursively solve the Sudoku puzzle (improved backtracking)
+function solveHelper ( board ) {
+      const emptyCell = findEmptyCell( board );
+      if ( !emptyCell ) return true; // Puzzle solved
+
+      const [ row, col ] = emptyCell;
+      for ( let num = 1; num <= 9; num++ ) {
+            if ( isValidMove( board, row, col, num ) ) {
+                  board[ row ][ col ] = num;
+                  if ( solveHelper( board ) ) return true;
+                  board[ row ][ col ] = 0; // Backtrack
+            }
+      }
+      return false; // No valid number found
 }
 
 // Function to solve the Sudoku puzzle
-function solveSudoku(board) {
-      const solvedPuzzle = JSON.parse(JSON.stringify(board));
-      solveHelper(solvedPuzzle);
+function solveSudoku ( board ) {
+      const solvedPuzzle = cloneBoard( board );
+      solveHelper( solvedPuzzle );
       return solvedPuzzle;
 }
 
-function isValidMove(board, row, col, num) {
-      for (let i = 0; i < 9; i++) {
-            if (board[row][i] === num || board[i][col] === num) {
+// Check if placing a number is valid
+function isValidMove ( board, row, col, num ) {
+      // Check the row and column
+      for ( let i = 0; i < 9; i++ ) {
+            if ( board[ row ][ i ] === num || board[ i ][ col ] === num ) {
                   return false;
             }
       }
-
-      const startRow = Math.floor(row / 3) * 3;
-      const startCol = Math.floor(col / 3) * 3;
-      for (let i = startRow; i < startRow + 3; i++) {
-            for (let j = startCol; j < startCol + 3; j++) {
-                  if (board[i][j] === num) {
+      // Check the 3x3 subgrid
+      const startRow = Math.floor( row / 3 ) * 3;
+      const startCol = Math.floor( col / 3 ) * 3;
+      for ( let i = startRow; i < startRow + 3; i++ ) {
+            for ( let j = startCol; j < startCol + 3; j++ ) {
+                  if ( board[ i ][ j ] === num ) {
                         return false;
                   }
             }
@@ -170,188 +143,152 @@ function isValidMove(board, row, col, num) {
       return true;
 }
 
-// Attach event listener to input elements dynamically
-function attachInputListeners() {
-      const textInputs = container.querySelectorAll("input[type='text']");
-      textInputs.forEach((input) => {
-            input.addEventListener("input", handleInput);
-      });
-}
-
-// Function to create the Sudoku puzzle grid
-function createSudokuGrid(puzzle, solvedCells) {
+// Create the Sudoku puzzle grid in the container
+function createSudokuGrid ( puzzle, solvedCells = new Set() ) {
       container.innerHTML = "";
       let numOfSolvedCells = 0;
-      puzzle.forEach((row, rowIndex) => {
-            const rowElement = document.createElement("div");
-            rowElement.classList.add("row");
 
-            row.forEach((cell, columnIndex) => {
+      puzzle.forEach( ( row, rowIndex ) => {
+            const rowElement = document.createElement( "div" );
+            rowElement.classList.add( "row" );
+
+            row.forEach( ( cell, columnIndex ) => {
                   let cellElement;
-                  if (cell !== 0) {
-                        cellElement = document.createElement("div");
-                        cellElement.classList.add("cell");
-                        let number = document.createElement("div");
-                        number.classList.add("number");
-                        number.innerHTML = cell;
-
-                        if (workingPuzzle[rowIndex][columnIndex] !== 0) {
-                              cellElement.classList.add("correct");
-                              cellElement.classList.add("solved");
+                  if ( cell !== 0 ) {
+                        cellElement = document.createElement( "div" );
+                        cellElement.classList.add( "cell" );
+                        cellElement.textContent = cell;
+                        if ( workingPuzzle[ rowIndex ][ columnIndex ] !== 0 ) {
+                              cellElement.classList.add( "correct", "solved" );
                               numOfSolvedCells++;
                         }
-
-                        if (solvedCells.has(`${rowIndex}-${columnIndex}`)) {
-                              cellElement.classList.add("solvedCell");
+                        if ( solvedCells.has( `${ rowIndex }-${ columnIndex }` ) ) {
+                              cellElement.classList.add( "solvedCell" );
                         }
-
-                        cellElement.appendChild(number);
-                  } else if (cell === 0) {
-                        cellElement = document.createElement("input");
-                        cellElement.classList.add("cell");
+                  } else {
+                        cellElement = document.createElement( "input" );
+                        cellElement.classList.add( "cell" );
                         cellElement.maxLength = 1;
                         cellElement.type = "text";
+                        cellElement.dataset.row = rowIndex;
+                        cellElement.dataset.col = columnIndex;
                   }
 
-                  const rowsPerGroup = 3; // Number of rows per group (for darkBackground or lightBackground)
-                  const columnsPerGroup = 3; // Number of columns per group (for darkBackground or lightBackground)
-
-                  // Determine the row group based on rowIndex
-                  const rowGroupIndex = Math.floor(rowIndex / rowsPerGroup);
-
-                  // Determine the column group based on columnIndex
-                  const columnGroupIndex = Math.floor(columnIndex / columnsPerGroup);
-
-                  // Determine the background color based on row group and column group
                   const isDarkBackground =
-                        (rowGroupIndex % 2 === 0 && columnGroupIndex % 2 === 0) ||
-                        (rowGroupIndex % 2 === 1 && columnGroupIndex % 2 === 1);
+                        ( Math.floor( rowIndex / 3 ) + Math.floor( columnIndex / 3 ) ) % 2 === 0;
+                  cellElement.classList.add( isDarkBackground ? "darkBackground" : "lightBackground" );
 
-                  cellElement.classList.add(
-                        isDarkBackground ? "darkBackground" : "lightBackground"
-                  );
+                  rowElement.appendChild( cellElement );
+            } );
 
-                  cellElement.setAttribute("data-row", rowIndex);
-                  cellElement.setAttribute("data-col", columnIndex);
-                  rowElement.appendChild(cellElement);
-            });
+            container.appendChild( rowElement );
 
-            container.appendChild(rowElement);
-      });
+      } );
 
-      // Attach event listeners to input fields after grid creation
       attachInputListeners();
-      console.log(numOfSolvedCells);
+      solvedNumbers.innerHTML = `You solved ${ numOfSolvedCells } out of ${ cellsToRemove } cells! <br> ${ numOfSolvedCells > Math.ceil( cellsToRemove / 2 ) ? "Great job!" : "Try again!" }`;
 
-      let message;
-      if (numOfSolvedCells > Math.ceil(cellsToRemove / 2)) {
-            message = "Great job!";
-      } else if (numOfSolvedCells == cellsToRemove) {
-            message = "Pefection!"
-      } else {
-            message = "Try again!"
-      }
-      document.getElementById("solvedNumbers").innerHTML = `You solved ${numOfSolvedCells} out of ${cellsToRemove} cells! </br> ${message}`;
 }
 
-// Function to solve the puzzle
-function solvePuzzle() {
-      const solvedBoard = solveSudoku(puzzle);
+// Attach input listeners to input cells using event delegation
+function attachInputListeners () {
+      container.addEventListener( "input", handleInput );
+}
+
+// Handle cell input validation and user interaction
+function handleInput ( event ) {
+      const input = event.target;
+      if ( input.tagName === "INPUT" && input.type === "text" ) {
+            const value = input.value;
+            const row = parseInt( input.dataset.row );
+            const col = parseInt( input.dataset.col );
+
+            if ( !/^\d?$/.test( value ) ) {
+                  input.value = ""; // Clear non-numeric input
+            } else {
+                  const num = parseInt( value );
+                  if ( num === solvedBoard[ row ][ col ] ) {
+                        input.classList.add( "correct" );
+                        input.classList.remove( "incorrect" );
+                        workingPuzzle[ row ][ col ] = num;
+                  } else {
+                        input.classList.add( "incorrect" );
+                        input.classList.remove( "correct" );
+                  }
+            }
+      }
+}
+
+// Solve the current Sudoku puzzle
+function solvePuzzle () {
+      const solvedPuzzle = solveSudoku( puzzle );
       const solvedCells = new Set();
 
       // Identify solved cells
-      for (let row = 0; row < 9; row++) {
-            for (let col = 0; col < 9; col++) {
-                  if (
-                        puzzle[row][col] === 0 &&
-                        solvedBoard[row][col] !== 0 &&
-                        workingPuzzle[row][col] === 0
-                  ) {
-                        solvedCells.add(`${row}-${col}`);
+      for ( let row = 0; row < 9; row++ ) {
+            const puzzleRow = puzzle[ row ];
+            const solvedRow = solvedBoard[ row ];
+            const workingRow = workingPuzzle[ row ];
+
+            for ( let col = 0; col < 9; col++ ) {
+                  if ( puzzleRow[ col ] === 0 && solvedRow[ col ] !== 0 && workingRow[ col ] === 0 ) {
+                        solvedCells.add( `${ row }-${ col }` );
                   }
             }
       }
-      createSudokuGrid(solvedBoard, solvedCells);
+      createSudokuGrid( solvedPuzzle, solvedCells )
 }
 
-// Function to reset the puzzle
-function resetPuzzle() {
-      document.getElementById("solvedNumbers").style.visibility = "hidden";
+// Reset the puzzle
+function resetPuzzle () {
+      document.getElementById( "solvedNumbers" ).style.visibility = "hidden";
       initialPuzzle = generateRandomSudoku();
-      puzzle = JSON.parse(JSON.stringify(initialPuzzle));
-      workingPuzzle = Array.from({ length: 9 }, () => Array(9).fill(0));
-      // Reset working puzzle
+      puzzle = cloneBoard( initialPuzzle );
+      workingPuzzle = Array.from( { length: 9 }, () => Array( 9 ).fill( 0 ) );
       solvedPuzzle = [];
-      const solvedCells = new Set();
-
-      createSudokuGrid(puzzle, solvedCells);
+      createSudokuGrid( puzzle );
 }
-
-// Function to check if a cell contains a valid number
-const isValidNumber = (value) => /^\d?$/.test(value); // Allow empty value
-
-// Function to validate inputs
-const handleInput = (event) => {
-      const input = event.target;
-      const value = input.value;
-      const row = parseInt(input.getAttribute("data-row"));
-      const col = parseInt(input.getAttribute("data-col"));
-
-      // Remove non-numeric characters
-      if (!isValidNumber(value)) {
-            input.value = ""; // Clear non-numeric input
-      } else {
-            const num = parseInt(value);
-            if (num === solvedBoard[row][col]) {
-                  input.classList.add("correct");
-                  input.classList.remove("incorrect");
-                  workingPuzzle[row][col] = num;
-            } else {
-                  input.classList.add("incorrect");
-                  input.classList.remove("correct");
-            }
-      }
-};
 
 // Initialize puzzle
 let initialPuzzle = generateRandomSudoku();
-let puzzle = JSON.parse(JSON.stringify(initialPuzzle));
-let workingPuzzle = Array.from({ length: 9 }, () => Array(9).fill(0));
+let puzzle = cloneBoard( initialPuzzle );
+let workingPuzzle = Array.from( { length: 9 }, () => Array( 9 ).fill( 0 ) );
 let solvedPuzzle = [];
 
 // Initial puzzle creation
-createSudokuGrid(puzzle, new Set());
+createSudokuGrid( puzzle );
 
 // Attach event listeners to buttons
-document.getElementById("solveButton").addEventListener("click", () => {
-      document.getElementById("solvedNumbers").style.visibility = "visible";
+document.getElementById( "solveButton" ).addEventListener( "click", () => {
+      document.getElementById( "solvedNumbers" ).style.visibility = "visible";
       solvePuzzle();
-});
-document.getElementById("resetButton").addEventListener("click", resetPuzzle);
+} );
+document.getElementById( "resetButton" ).addEventListener( "click", resetPuzzle );
 
-const easyMode = document.getElementById("easyButton");
-easyMode.addEventListener("click", () => {
-      easyMode.style.backgroundColor = "#f5957d";
-      mediumMode.style.backgroundColor = "";
-      hardMode.style.backgroundColor = "";
-      cellsToRemove = 25;
-      resetPuzzle();
-});
+const difficultyButtons = document.querySelectorAll( "#easyButton, #mediumButton, #hardButton" );
 
-const mediumMode = document.getElementById("mediumButton");
-mediumMode.addEventListener("click", () => {
-      mediumMode.style.backgroundColor = "#f5957d";
-      hardMode.style.backgroundColor = "";
-      easyMode.style.backgroundColor = "";
-      cellsToRemove = 40;
-      resetPuzzle();
-});
+difficultyButtons.forEach( button => {
+      button.addEventListener( "click", ( event ) => {
+            // Reset all button background colors
+            difficultyButtons.forEach( btn => btn.style.backgroundColor = "" );
 
-const hardMode = document.getElementById("hardButton");
-hardMode.addEventListener("click", () => {
-      hardMode.style.backgroundColor = "#f5957d";
-      easyMode.style.backgroundColor = "";
-      mediumMode.style.backgroundColor = "";
-      cellsToRemove = 55;
-      resetPuzzle();
-});
+            // Set the background color for the clicked button
+            event.target.style.backgroundColor = "#f5957d";
+
+            // Set cellsToRemove based on the button clicked
+            switch ( event.target.id ) {
+                  case "easyButton":
+                        cellsToRemove = 25;
+                        break;
+                  case "mediumButton":
+                        cellsToRemove = 40;
+                        break;
+                  case "hardButton":
+                        cellsToRemove = 55;
+                        break;
+            }
+
+            // Reset the puzzle with the new difficulty
+            resetPuzzle();
+      } );
+} );
