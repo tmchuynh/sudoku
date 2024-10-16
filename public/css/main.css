@@ -1,4 +1,41 @@
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playwrite+HR+Lijeva&display=swap");
+/* vietnamese */
+@font-face {
+      font-family: 'Dancing Script';
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/dancingscript/v25/If2RXTr6YS-zF4S-kcSWSVi_szLviuEViw.woff2) format('woff2');
+      unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+
+/* latin-ext */
+@font-face {
+      font-family: 'Dancing Script';
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/dancingscript/v25/If2RXTr6YS-zF4S-kcSWSVi_szLuiuEViw.woff2) format('woff2');
+      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+      font-family: 'Dancing Script';
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/dancingscript/v25/If2RXTr6YS-zF4S-kcSWSVi_szLgiuE.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* fallback */
+@font-face {
+      font-family: 'Playwrite HR Lijeva';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/playwritehrlijeva/v1/gNMvW2dhS5-p7HvxrBYiWN2SsKqLWCrYiDBAvbRl82ZY0d4zBsaR.woff2) format('woff2');
+}
 
 body {
       background-color: #fff;
@@ -14,19 +51,19 @@ body {
 }
 
 .container {
+      /* display: grid;
+      grid-template-columns: repeat(9, 1fr); */
       display: flex;
       flex-direction: column;
-      align-items: center;
-}
-
-.row {
-      display: flex;
 }
 
 .cell {
       width: 60px;
       height: 60px;
       border: 1px solid black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       text-align: center;
       font-size: 2em;
       line-height: 30px;
@@ -34,12 +71,9 @@ body {
       position: relative;
 }
 
-.number {
-      margin-top: 0.5em;
-}
-
-input {
-      color: #e10e9b;
+.row {
+      margin: 0;
+      justify-content: center;
 }
 
 input[type="text"] {
@@ -53,17 +87,18 @@ input[type="text"] {
       margin-bottom: 2rem;
 }
 
-.buttonContainer button {
+button {
       margin-right: 10px;
       font-size: 1.5rem;
       font-family: "Dancing Script", cursive;
+      padding: .5rem 1rem;
 }
 
 button:hover {
       background-color: #ffdfb3;
 }
 
-#solvedNumbers {
+.solvedMessage {
       margin: 1.5rem;
       visibility: hidden;
 }
