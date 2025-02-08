@@ -1,97 +1,72 @@
-<div align="center" id="top"> 
-  <img src="./.github/app.gif" alt="Sudoku" />
+# **Sudoku Game**
 
-&#xa0;
+## **About the Project**
+This Sudoku game is an interactive web-based puzzle that allows players to solve Sudoku grids at different difficulty levels. Players can select preset difficulty options—**Easy, Medium, or Hard**—which determine the number of prefilled cells. Additionally, users can manually customize their challenge by choosing the number of cells removed from the grid. The game is designed to be intuitive, responsive, and engaging for both beginners and experienced Sudoku enthusiasts.
 
-  <!-- <a href="https://sudoku.netlify.app">Demo</a> -->
-</div>
+---
 
-<h1 align="center">Sudoku</h1>
+## **How to Play**
+### **Objective**
+The goal of Sudoku is to fill a **9x9 grid** with numbers **1-9**, ensuring that:
+- Each **row** contains every number from **1-9** exactly once.
+- Each **column** contains every number from **1-9** exactly once.
+- Each **3x3 subgrid** contains every number from **1-9** exactly once.
 
-<p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/tmchuynh/sudoku?color=56BEB8">
+### **Game Setup**
+1. **Select Difficulty:** Click on **Easy, Medium, or Hard** to generate a prefilled Sudoku grid with a varying number of missing cells.
+2. **Custom Challenge:** Alternatively, use the custom difficulty option to select how many cells should be removed for a personalized challenge.
+3. **Start Solving:** Click on any empty cell and input a number between **1-9** to begin solving the puzzle.
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/tmchuynh/sudoku?color=56BEB8">
+### **Game Rules**
+- A number **cannot** be repeated in the same row, column, or 3x3 section.
+- If you enter an incorrect number, you can **erase it** and try again.
+- The puzzle is completed when all cells are filled **correctly**.
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/tmchuynh/sudoku?color=56BEB8">
+---
 
-  <img alt="License" src="https://img.shields.io/github/license/tmchuynh/sudoku?color=56BEB8">
+## **Features**
+✅ **Preset Difficulty Levels** – Choose from **Easy, Medium, or Hard** modes for automatic Sudoku generation.  
+✅ **Custom Challenge Mode** – Manually set the number of empty cells for a personalized experience.  
+✅ **Interactive Grid** – Click on empty cells to input numbers and solve the puzzle dynamically.  
+✅ **Error Checking** – Ensure that numbers follow Sudoku rules with visual hints and validations.  
+✅ **Responsive Design** – Play seamlessly on desktops, tablets, and mobile devices.  
+✅ **Intuitive UI** – Clean layout and easy-to-use controls for smooth gameplay.  
 
-  <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/tmchuynh/sudoku?color=56BEB8" /> -->
+---
 
-  <!-- <img alt="Github forks" src="https://img.shields.io/github/forks/tmchuynh/sudoku?color=56BEB8" /> -->
+## **Technologies Used**
+- **HTML** – Structure and layout of the Sudoku grid  
+- **CSS** – Styling for a clean and responsive user interface  
+- **JavaScript** – Core game logic, difficulty selection, and error validation  
 
-  <!-- <img alt="Github stars" src="https://img.shields.io/github/stars/tmchuynh/sudoku?color=56BEB8" /> -->
-</p>
+---
 
-<!-- Status -->
+## **Installation & Running the Game**
+To play locally, follow these steps:
 
-<!-- <h4 align="center">
-	🚧  Sudoku 🚀 Under construction...  🚧
-</h4>
-
-<hr> -->
-
-<p align="center">
-  <a href="#dart-about">About</a> &#xa0; | &#xa0; 
-  <a href="#sparkles-features">Features</a> &#xa0; | &#xa0;
-  <a href="#rocket-technologies">Technologies</a> &#xa0; | &#xa0;
-  <a href="#white_check_mark-requirements">Requirements</a> &#xa0; | &#xa0;
-  <a href="#checkered_flag-starting">Starting</a> &#xa0; | &#xa0;
-  <a href="#memo-license">License</a> &#xa0; | &#xa0;
-  <a href="https://github.com/tmchuynh" target="_blank">Author</a>
-</p>
-
-<br>
-
-## :dart: About
-
-Describe your project
-
-## :sparkles: Features
-
-:heavy_check_mark: Feature 1;\
-:heavy_check_mark: Feature 2;\
-:heavy_check_mark: Feature 3;
-
-## :rocket: Technologies
-
-The following tools were used in this project:
-
-- [Expo](https://expo.io/)
-- [Node.js](https://nodejs.org/en/)
-- [React](https://pt-br.reactjs.org/)
-- [React Native](https://reactnative.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-
-## :white_check_mark: Requirements
-
-Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Node](https://nodejs.org/en/) installed.
-
-## :checkered_flag: Starting
-
-```bash
-# Clone this project
-$ git clone https://github.com/tmchuynh/sudoku
-
-# Access
-$ cd sudoku
-
-# Install dependencies
-$ yarn
-
-# Run the project
-$ yarn start
-
-# The server will initialize in the <http://localhost:3000>
+### **1. Clone the Repository**
+```sh
+git clone https://github.com/your-username/sudoku-game.git
+cd sudoku-game
 ```
 
-## :memo: License
+### **2. Open the Game**
+Simply open the `index.html` file in your preferred browser.
 
-This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
+---
 
-Made with :heart: by <a href="https://github.com/tmchuynh" target="_blank">Tina Huynh</a>
+## **Future Enhancements**
+🚀 **Hint System** – Add optional hints to assist players when stuck.  
+🚀 **Timer & Score Tracking** – Implement a timer and leaderboard for competitive play.  
+🚀 **Dark Mode** – Introduce a dark theme for comfortable gameplay at night.  
 
-&#xa0;
+---
 
-<a href="#top">Back to top</a>
+## **License**
+This project is open-source and available under the **MIT License**. Feel free to contribute, modify, and improve!
+
+Made with ❤️ by **[Your Name](https://github.com/your-username)**
+
+---
+### **🔗 Back to Top**
+[Back to Top](#sudoku-game) 🚀
